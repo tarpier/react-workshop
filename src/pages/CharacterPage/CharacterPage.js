@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Text, Flex } from 'rebass';
 import styled from 'styled-components';
-import CharacterList from '../CharacterList';
-import Pagination from '../Pagination';
+import CharacterList from '../../components/CharacterList';
+import Pagination from '../../components/Pagination';
 
 const PageWrapper = styled(Flex)`
   justify-content: center;
@@ -12,7 +12,7 @@ const PageWrapper = styled(Flex)`
   max-width: 1200px;
 `;
 
-class App extends Component {
+class CharacterPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -73,4 +73,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default CharacterPage;
