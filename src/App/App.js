@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
+import { Text, Flex } from 'rebass';
+import styled from 'styled-components';
 import CharacterList from '../CharacterList';
 import Pagination from '../Pagination';
+
+const PageWrapper = styled(Flex)`
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+`;
 
 class App extends Component {
   constructor() {
@@ -13,6 +22,9 @@ class App extends Component {
     };
   }
 
+  // ******
+  // Fetch data from api
+  // ******
   fetchData(currentPage) {
     this.setState({ currentPage: currentPage >= 1 ? currentPage : 1 });
     fetch(`https://rickandmortyapi.com/api/character/?page=${currentPage}`)
@@ -20,10 +32,15 @@ class App extends Component {
         if (!response.ok) {
           throw Error(response.statusText);
         }
-        return response.json();
+        return response.json(); // format response to json
       })
       .then(responseAsJson => {
-        this.setState({ loading: false, entries: responseAsJson.results });
+        // unpack the promise and save to state
+        this.setState({
+          loading: false,
+          error: false,
+          entries: responseAsJson.results
+        });
       })
       .catch(error => {
         this.setState({ loading: false, error: true });
@@ -36,18 +53,21 @@ class App extends Component {
   }
 
   render() {
-    const { loading, entries, currentPage } = this.state;
+    const { loading, entries, currentPage, error } = this.state;
+
+    if (error) {
+      return <Text>ERROR</Text>;
+    }
+
     return (
-      <div className="App">
-        <input type="text" />
+      <PageWrapper>
         <CharacterList loading={loading} entries={entries} />
         <Pagination
           currentPage={currentPage}
-          //allPages={!loading && data.info.pages}
           onNextPageClick={() => this.fetchData(this.state.currentPage + 1)}
           onPrevPageClick={() => this.fetchData(this.state.currentPage - 1)}
         />
-      </div>
+      </PageWrapper>
     );
   }
 }

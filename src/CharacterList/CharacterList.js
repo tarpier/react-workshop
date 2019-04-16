@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Flex, Card, Image, Heading, Text } from 'rebass';
-import PropTypes from 'prop-types';
 
 const CharacterList = ({ loading, entries }) =>
   console.log(entries) || (
@@ -13,6 +12,7 @@ const CharacterList = ({ loading, entries }) =>
                 width={1 / 4}
                 key={item.id}
                 p={1}
+                m={2}
                 borderRadius={2}
                 boxShadow="0 0 16px rgba(0, 0, 0, .25)"
               >
@@ -29,13 +29,5 @@ const CharacterList = ({ loading, entries }) =>
           })}
     </Flex>
   );
-
-CharacterList.propTypes = {
-  // bla: PropTypes.string,
-};
-
-CharacterList.defaultProps = {
-  // bla: 'test',
-};
 
 export default CharacterList;

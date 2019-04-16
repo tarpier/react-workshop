@@ -1,23 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Box } from 'rebass';
+import { Flex, Button, Text } from 'rebass';
+import styled from 'styled-components';
+
+const PaginationWrapper = styled(Flex)`
+  justify-content: center;
+  align-items: center;
+`;
 
 const Pagination = ({ currentPage, onPrevPageClick, onNextPageClick }) => {
   return (
-    <Box>
-      <button onClick={() => onPrevPageClick()}>prev page</button>
-      <span>{currentPage}</span>
-      <button onClick={() => onNextPageClick()}>next page</button>
-    </Box>
+    <PaginationWrapper>
+      <Button bg="white" color="black" onClick={() => onPrevPageClick()}>
+        prev page
+      </Button>
+      <Text>{currentPage}</Text>
+      <Button bg="white" color="black" onClick={() => onNextPageClick()}>
+        next page
+      </Button>
+    </PaginationWrapper>
   );
-};
-
-Pagination.propTypes = {
-  // bla: PropTypes.string,
-};
-
-Pagination.defaultProps = {
-  // bla: 'test',
 };
 
 export default Pagination;
