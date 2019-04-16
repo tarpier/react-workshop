@@ -9,6 +9,7 @@ const PageWrapper = styled(Flex)`
   align-items: center;
   flex-direction: column;
   margin: 0 auto;
+  max-width: 1200px;
 `;
 
 class App extends Component {
