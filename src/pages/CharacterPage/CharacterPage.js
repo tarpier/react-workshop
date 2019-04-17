@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Text, Flex } from 'rebass';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { fetchCharacterData } from '../../actions/fetchCharacterData';
+import { incrementCharacterPage } from '../../actions/incrementCharacterPage';
+import { decrementCharacterPage } from '../../actions/decrementCharacterPage';
+
 import CharacterList from '../../components/CharacterList';
 import Pagination from '../../components/Pagination';
 
@@ -15,48 +19,24 @@ const PageWrapper = styled(Flex)`
 `;
 
 class CharacterPage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true,
-      error: false,
-      entries: {},
-      currentPage: 1
-    };
-  }
-
-  // ******
-  // Fetch data from api
-  // ******
-  fetchData(currentPage) {
-    this.setState({ currentPage: currentPage >= 1 ? currentPage : 1 });
-    fetch(`https://rickandmortyapi.com/api/character/?page=${currentPage}`)
-      .then(response => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json(); // format response to json
-      })
-      .then(responseAsJson => {
-        // unpack the promise and save to state
-        this.setState({
-          loading: false,
-          error: false,
-          entries: responseAsJson.results
-        });
-      })
-      .catch(error => {
-        this.setState({ loading: false, error: true });
-        console.log('Looks like there was a problem: \n', error);
-      });
-  }
-
   componentDidMount() {
-    this.fetchData(this.state.currentPage);
+    this.props.fetchCharacterData(this.props.currentPage);
+  }
+
+  nextPage() {
+    if (this.props.currentPage < this.props.allPages) {
+      this.props.incrementCharacterPage(this.props.currentPage);
+    }
+  }
+
+  prevPage() {
+    if (this.props.currentPage > 1) {
+      this.props.decrementCharacterPage(this.props.currentPage);
+    }
   }
 
   render() {
-    const { loading, entries, currentPage, error } = this.state;
+    const { entries, loading, error, currentPage } = this.props;
 
     if (error) {
       return <Text>ERROR</Text>;
@@ -67,8 +47,8 @@ class CharacterPage extends Component {
         <CharacterList loading={loading} entries={entries} />
         <Pagination
           currentPage={currentPage}
-          onNextPageClick={() => this.fetchData(this.state.currentPage + 1)}
-          onPrevPageClick={() => this.fetchData(this.state.currentPage - 1)}
+          onNextPageClick={() => this.nextPage()}
+          onPrevPageClick={() => this.prevPage()}
         />
       </PageWrapper>
     );
@@ -76,10 +56,23 @@ class CharacterPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  isDarkMode: state.ui.darkMode
+  isDarkMode: state.ui.darkMode,
+  entries: state.character.data,
+  loading: state.character.loading,
+  error: state.character.error,
+  currentPage: state.character.currentPage,
+  allPages: state.character.allPages
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchCharacterData: currentPage => dispatch(fetchCharacterData(currentPage)),
+  incrementCharacterPage: currentPage =>
+    dispatch(incrementCharacterPage(currentPage)),
+  decrementCharacterPage: currentPage =>
+    dispatch(decrementCharacterPage(currentPage))
 });
 
 export default connect(
   mapStateToProps,
-  {}
+  mapDispatchToProps
 )(CharacterPage);
