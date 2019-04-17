@@ -14,10 +14,11 @@ import rootReducer from './reducers/rootReducer';
 
 const middleWare = [thunk];
 
-export default function configureStore(initialState = {}) {
+export default function configureStore() {
+//initialState = { ui: { darkmode: false } }
   return createStore(
     rootReducer,
-    initialState,
+    //initialState,
     composeWithDevTools(applyMiddleware(...middleWare))
   );
 }

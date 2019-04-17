@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Text, Flex } from 'rebass';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import CharacterList from '../../components/CharacterList';
 import Pagination from '../../components/Pagination';
 
 const PageWrapper = styled(Flex)`
+  background-color: ${props => (props.darkMode ? 'black' : 'white')};
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -61,7 +63,7 @@ class CharacterPage extends Component {
     }
 
     return (
-      <PageWrapper>
+      <PageWrapper darkMode={this.props.isDarkMode}>
         <CharacterList loading={loading} entries={entries} />
         <Pagination
           currentPage={currentPage}
@@ -73,4 +75,11 @@ class CharacterPage extends Component {
   }
 }
 
-export default CharacterPage;
+const mapStateToProps = state => ({
+  isDarkMode: state.ui.darkMode
+});
+
+export default connect(
+  mapStateToProps,
+  {}
+)(CharacterPage);

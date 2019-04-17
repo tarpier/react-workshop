@@ -2,9 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Box, Heading } from 'rebass';
 import { Link } from '@reach/router';
+import { connect } from 'react-redux';
+import { toggleDarkMode } from '../../actions/toggleDarkMode';
 
 const PageWrapper = styled.div`
-  background-color: white;
+  background-color: ${props => (props.darkMode ? 'black' : 'white')};
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -24,15 +26,29 @@ const Navigation = styled(Box)`
   border-radius: 2em;
 `;
 
-const Home = () => {
+const Home = props => {
   return (
-    <PageWrapper>
+    <PageWrapper darkMode={props.isDarkMode}>
       <Navigation>
         <Heading>HOME</Heading>
         <Link to={'/characters'}>Go to Character Overview</Link>
+        <button onClick={() => props.toggleDarkMode()}>
+          {props.isDarkMode ? 'Lightmode' : 'Darkmode'}
+        </button>
       </Navigation>
     </PageWrapper>
   );
 };
 
-export default Home;
+const mapStateToProps = state => ({
+  isDarkMode: state.ui.darkMode
+});
+
+const mapDispatchToProps = dispatch => ({
+  toggleDarkMode: () => dispatch(toggleDarkMode())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);
